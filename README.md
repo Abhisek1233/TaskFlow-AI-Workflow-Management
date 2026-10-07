@@ -1,6 +1,6 @@
 # TaskFlow — AI-Assisted Workflow Management Platform
 
-TaskFlow is a production-grade, practical full-stack web application designed for engineering teams to organize deliverables, monitor task lifecycles, and leverage AI for task triage and next-action recommendations. 
+TaskFlow is a practical full-stack web application designed for engineering teams to organize tasks, monitor task lifecycles, and use AI-assisted task triage and next-action recommendations.
 
 Built as a portfolio project for a **Forward Deployed Engineer Intern** role, TaskFlow demonstrates how to combine a high-performance **Python REST backend (FastAPI)**, a relational **PostgreSQL** database, an intuitive **React + Vite** frontend, and **Google Gemini AI API** integration into a clean, maintainable architecture.
 
@@ -10,14 +10,14 @@ Built as a portfolio project for a **Forward Deployed Engineer Intern** role, Ta
 
 - **User Authentication**: Secure user registration, password hashing with `bcrypt`, and stateless JWT access tokens (24-hour expiration).
 - **Task Management CRUD**: Full Create, Read, Update, and Delete operations for tasks with categories, priorities, statuses, and due dates.
-- **Strict Multi-Tenant Isolation**: Database-level authorization ensuring users can only read, update, or delete their own tasks.
+- **User-Level Data Isolation**: Users can only read, update, and delete their own tasks through authenticated API endpoints. User-level authorization ensures authenticated users can only access their own tasks.
 - **Search & Multi-Parameter Filtering**: Real-time filtering by status (`Pending`, `In Progress`, `Completed`), priority (`Low`, `Medium`, `High`, `Urgent`), category, and search terms across titles and descriptions.
 - **Interactive Dashboard**: Real-time KPI metric cards (Total Tasks, Pending, In Progress, Completed, High/Urgent Priority) and progress tracking.
 - **AI-Assisted Task Triage**: Direct integration with the **Google Gemini REST API** via Python `httpx`:
   - Analyzes messy task descriptions and bug reports.
   - Returns structured JSON: suggested priority, category, executive summary, and immediate next action.
   - Allows users to review and apply AI suggestions to task forms.
-  - **Graceful Fallback**: Rule-based heuristic analyzer keeps the application 100% operational even if the external AI API is unreachable or before an API key is configured.
+  - **Graceful Fallback**: A rule-based fallback analyzer provides basic task suggestions when the external AI API is unavailable or not configured.
 - **Automated Test Suite**: 21 comprehensive pytest integration tests covering auth, CRUD, authorization boundaries, and AI endpoints.
 - **Postman Collection**: Ready-to-import Postman collection with parameterized variables and automated token extraction.
 
@@ -45,7 +45,7 @@ Built as a portfolio project for a **Forward Deployed Engineer Intern** role, Ta
 - **Lucide React**: Clean, accessible iconography.
 
 ### External AI Service
-- **Google Gemini API** (`gemini-1.5-flash`) via backend proxy.
+- **Google Gemini API** (`gemini-2.0-flash`, free on Google AI Studio) via backend proxy.
 
 ---
 
@@ -149,7 +149,7 @@ Built as a portfolio project for a **Forward Deployed Engineer Intern** role, Ta
 1. **API Key Protection**: External AI API keys (like Google Gemini) must NEVER be shipped in frontend client bundles. In TaskFlow, the React app only speaks to the FastAPI backend.
 2. **Controlled Prompts**: The backend controls the system prompt, enforcing that Gemini responds with strict JSON schema and low temperature for deterministic classification.
 3. **Validation & Normalization**: The backend verifies that the AI's returned priority maps strictly into `["Low", "Medium", "High", "Urgent"]` and that required keys exist before delivering them to the UI.
-4. **Resilient Fallback**: If Gemini rate limits or encounters network timeouts, a rule-based fallback heuristic classifies the task so the application never breaks.
+4. **Graceful Fallback**: If the external AI API is unavailable, rate-limited, or not configured, a rule-based fallback analyzer provides basic task suggestions.
 
 ---
 

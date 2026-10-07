@@ -7,8 +7,8 @@ FastAPI REST API backend for TaskFlow — AI-Assisted Workflow Management Platfo
 - **PostgreSQL Database**: Relational schema with SQLAlchemy 2.0 ORM and connection pooling.
 - **JWT Authentication**: Password hashing with `bcrypt` and signed JWT access tokens with 24-hour expiration.
 - **Task Management CRUD**: Full create, read, update, delete, status toggle, search, and multi-parameter filtering.
-- **Strict Authorization**: User-specific database filtering preventing unauthorized access or modification.
-- **AI Task Analysis**: Google Gemini API integration using `httpx` with strict JSON schema validation and rule-based fallback.
+- **User-Level Data Isolation**: Authenticated endpoints ensure users can only access and modify their own tasks.
+- **AI Task Analysis**: Google Gemini API integration (`gemini-2.0-flash`) using `httpx` with structured JSON output and a graceful rule-based fallback.
 - **Automated Testing**: pytest test suite covering authentication, authorization, CRUD, and AI endpoints.
 
 ## Setup Instructions
