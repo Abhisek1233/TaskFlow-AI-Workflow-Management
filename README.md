@@ -253,5 +253,5 @@ If a task ID belongs to another user, the query returns `None`, and the API resp
 
 ---
 
-## 10. Author & License
-Created by **Abhisek Behera** as a portfolio project for Forward Deployed Engineering roles. Released under the [MIT License](LICENSE).
+## 10. Author & Project Info
+Developed by **Abhisek Behera** as a personal portfolio project demonstrating full-stack engineering with FastAPI, PostgreSQL, React, and Google Gemini AI.
