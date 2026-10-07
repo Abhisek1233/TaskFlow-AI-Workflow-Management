@@ -60,20 +60,17 @@ export const AIAnalyzeModal = ({ isOpen, onClose, onCreateFromAnalysis }) => {
     <div className="fixed inset-0 z-50 overflow-y-auto bg-slate-900/60 backdrop-blur-xs flex items-center justify-center p-4">
       <div className="bg-white rounded-2xl max-w-xl w-full shadow-2xl border border-slate-200 overflow-hidden transform transition-all animate-in fade-in zoom-in-95 duration-200">
         {/* Header */}
-        <div className="px-6 py-4 bg-gradient-to-r from-indigo-900 to-slate-900 text-white flex items-center justify-between">
+        <div className="px-6 py-4 bg-slate-50 border-b border-slate-200 flex items-center justify-between">
           <div className="flex items-center gap-2">
-            <div className="p-1.5 bg-indigo-500/20 rounded-lg border border-indigo-400/30">
-              <Sparkles className="w-5 h-5 text-indigo-300" />
-            </div>
-            <div>
-              <h2 className="text-base font-bold text-white">AI Workflow Triage</h2>
-              <p className="text-xs text-indigo-200">Powered by Google Gemini REST API</p>
-            </div>
+            <h2 className="text-base font-bold text-slate-900">AI Task Triage</h2>
+            <span className="text-[11px] bg-slate-200 text-slate-600 px-2 py-0.5 rounded-full font-medium">
+              Task helper
+            </span>
           </div>
           <button
             type="button"
             onClick={onClose}
-            className="text-indigo-200 hover:text-white p-1 rounded-lg hover:bg-white/10 transition-colors"
+            className="text-slate-400 hover:text-slate-600 p-1 rounded-lg hover:bg-slate-200/60 transition-colors"
           >
             <X className="w-5 h-5" />
           </button>

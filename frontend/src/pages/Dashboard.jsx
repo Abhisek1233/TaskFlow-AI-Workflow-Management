@@ -12,6 +12,7 @@ import {
   TrendingUp,
   Loader2
 } from 'lucide-react';
+import { useAuth } from '../context/AuthContext';
 import { taskService } from '../services/taskService';
 import { StatCard } from '../components/StatCard';
 import { TaskCard } from '../components/TaskCard';
@@ -19,6 +20,7 @@ import { TaskFormModal } from '../components/TaskFormModal';
 import { AIAnalyzeModal } from '../components/AIAnalyzeModal';
 
 export const Dashboard = () => {
+  const { user } = useAuth();
   const [stats, setStats] = useState({
     total_tasks: 0,
     pending_tasks: 0,
@@ -88,7 +90,7 @@ export const Dashboard = () => {
     try {
       await taskService.updateTaskStatus(taskId, newStatus);
       await fetchData();
-    } catch (err) {
+    } catch {
       alert('Failed to update task status.');
     }
   };
@@ -98,7 +100,7 @@ export const Dashboard = () => {
     try {
       await taskService.deleteTask(taskId);
       await fetchData();
-    } catch (err) {
+    } catch {
       alert('Failed to delete task.');
     }
   };
@@ -108,104 +110,96 @@ export const Dashboard = () => {
     : 0;
 
   return (
-    <div className="space-y-8">
-      {/* Hero Welcome & Action Bar */}
-      <div className="bg-gradient-to-r from-slate-900 via-indigo-950 to-slate-900 rounded-2xl p-6 sm:p-8 text-white shadow-lg relative overflow-hidden">
-        {/* Background ambient lighting */}
-        <div className="absolute top-0 right-0 -mr-16 -mt-16 w-64 h-64 bg-indigo-500/20 rounded-full blur-3xl pointer-events-none"></div>
+    <div className="space-y-6">
+      {/* Clean, Professional Page Header */}
+      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 pb-2 border-b border-slate-200/80">
+        <div>
+          <h1 className="text-2xl font-bold text-slate-900 tracking-tight">
+            Dashboard
+          </h1>
+          <p className="text-xs sm:text-sm text-slate-500 mt-0.5">
+            Welcome back, {user?.name || 'Developer'}. Overview of your tasks and workflows.
+          </p>
+        </div>
 
-        <div className="relative z-10 flex flex-col md:flex-row md:items-center justify-between gap-6">
-          <div>
-            <div className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-indigo-500/20 text-indigo-300 border border-indigo-500/30 text-xs font-semibold uppercase tracking-wider mb-3">
-              <Sparkles className="w-3.5 h-3.5" />
-              Forward Deployed AI Workflow Engine
-            </div>
-            <h1 className="text-2xl sm:text-3xl font-extrabold tracking-tight">
-              TaskFlow Overview
-            </h1>
-            <p className="text-slate-300 text-sm mt-1.5 max-w-xl">
-              Track priority deliverables, monitor development lifecycle states, and triage incoming tasks with Google Gemini AI.
-            </p>
-          </div>
+        {/* Action Buttons */}
+        <div className="flex items-center gap-2.5">
+          {/* Analyze with AI Button */}
+          <button
+            type="button"
+            onClick={() => setIsAITriageOpen(true)}
+            className="inline-flex items-center gap-2 px-3.5 py-2 rounded-lg border border-slate-300 bg-white hover:bg-slate-50 text-slate-700 text-xs sm:text-sm font-medium shadow-xs transition-colors"
+          >
+            <Sparkles className="w-4 h-4 text-indigo-600" />
+            Analyze with AI
+          </button>
 
-          {/* Quick Action Buttons */}
-          <div className="flex flex-wrap items-center gap-3">
-            {/* Analyze with AI Button (Explicitly required in spec) */}
-            <button
-              type="button"
-              onClick={() => setIsAITriageOpen(true)}
-              className="inline-flex items-center gap-2 px-4 py-2.5 rounded-xl bg-gradient-to-r from-indigo-500 to-violet-600 hover:from-indigo-600 hover:to-violet-700 text-white font-semibold text-sm shadow-md shadow-indigo-500/20 transition-all hover:scale-[1.02] active:scale-[0.98]"
-            >
-              <Sparkles className="w-4 h-4 text-indigo-200" />
-              Analyze with AI
-            </button>
-
-            <button
-              type="button"
-              onClick={() => {
-                setEditingTask(null);
-                setIsTaskModalOpen(true);
-              }}
-              className="inline-flex items-center gap-2 px-4 py-2.5 rounded-xl bg-white text-slate-900 hover:bg-slate-100 font-semibold text-sm shadow-md transition-all hover:scale-[1.02] active:scale-[0.98]"
-            >
-              <Plus className="w-4 h-4 text-slate-700" />
-              Create Task
-            </button>
-          </div>
+          {/* Create Task Button */}
+          <button
+            type="button"
+            onClick={() => {
+              setEditingTask(null);
+              setIsTaskModalOpen(true);
+            }}
+            className="inline-flex items-center gap-2 px-4 py-2 rounded-lg bg-indigo-600 hover:bg-indigo-700 text-white text-xs sm:text-sm font-medium shadow-xs transition-colors"
+          >
+            <Plus className="w-4 h-4" />
+            Create Task
+          </button>
         </div>
       </div>
 
       {/* Dashboard Metrics (5 target cards) */}
-      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-5 gap-4">
+      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-5 gap-3.5">
         <StatCard
           title="Total Tasks"
           value={stats.total_tasks}
           icon={CheckSquare}
           colorClass="bg-slate-100 text-slate-700"
-          subtitle="All assigned tasks"
+          subtitle="All tasks"
         />
         <StatCard
           title="Pending"
           value={stats.pending_tasks}
           icon={Clock}
-          colorClass="bg-amber-100 text-amber-700"
-          subtitle="Awaiting start"
+          colorClass="bg-amber-50 text-amber-700"
+          subtitle="Awaiting action"
         />
         <StatCard
           title="In Progress"
           value={stats.in_progress_tasks}
           icon={PlayCircle}
-          colorClass="bg-blue-100 text-blue-700"
-          subtitle="Active workflows"
+          colorClass="bg-blue-50 text-blue-700"
+          subtitle="Active work"
         />
         <StatCard
           title="Completed"
           value={stats.completed_tasks}
           icon={CheckCircle2}
-          colorClass="bg-emerald-100 text-emerald-700"
-          subtitle={`${completionRate}% resolution`}
+          colorClass="bg-emerald-50 text-emerald-700"
+          subtitle={`${completionRate}% resolved`}
         />
         <StatCard
           title="High Priority"
           value={stats.high_priority_tasks}
           icon={AlertTriangle}
-          colorClass="bg-rose-100 text-rose-700"
-          subtitle="High & Urgent items"
+          colorClass="bg-rose-50 text-rose-700"
+          subtitle="Urgent & High items"
         />
       </div>
 
       {/* Progress Bar Overview */}
-      <div className="bg-white rounded-xl border border-slate-200 p-5 shadow-xs">
+      <div className="bg-white rounded-xl border border-slate-200 p-4 sm:p-5 shadow-xs">
         <div className="flex items-center justify-between mb-2">
-          <span className="text-xs font-bold uppercase tracking-wider text-slate-700 flex items-center gap-2">
-            <TrendingUp className="w-4 h-4 text-indigo-600" />
-            Workflow Completion Progress
+          <span className="text-xs font-semibold text-slate-700 flex items-center gap-2">
+            <TrendingUp className="w-4 h-4 text-slate-500" />
+            Completion Progress
           </span>
-          <span className="text-xs font-semibold text-slate-700">
+          <span className="text-xs font-medium text-slate-500">
             {stats.completed_tasks} of {stats.total_tasks} tasks ({completionRate}%)
           </span>
         </div>
-        <div className="w-full h-3 bg-slate-100 rounded-full overflow-hidden flex">
+        <div className="w-full h-2.5 bg-slate-100 rounded-full overflow-hidden flex">
           <div 
             style={{ width: `${stats.total_tasks > 0 ? (stats.completed_tasks / stats.total_tasks) * 100 : 0}%` }} 
             className="bg-emerald-500 transition-all duration-500" 
@@ -222,50 +216,50 @@ export const Dashboard = () => {
             title="Pending"
           />
         </div>
-        <div className="flex items-center gap-5 mt-3 text-[11px] text-slate-500 font-medium">
-          <span className="flex items-center gap-1.5"><span className="w-2.5 h-2.5 rounded-full bg-emerald-500"></span> Completed</span>
-          <span className="flex items-center gap-1.5"><span className="w-2.5 h-2.5 rounded-full bg-blue-500"></span> In Progress</span>
-          <span className="flex items-center gap-1.5"><span className="w-2.5 h-2.5 rounded-full bg-amber-400"></span> Pending</span>
+        <div className="flex items-center gap-5 mt-2.5 text-[11px] text-slate-500">
+          <span className="flex items-center gap-1.5"><span className="w-2 h-2 rounded-full bg-emerald-500"></span> Completed</span>
+          <span className="flex items-center gap-1.5"><span className="w-2 h-2 rounded-full bg-blue-500"></span> In Progress</span>
+          <span className="flex items-center gap-1.5"><span className="w-2 h-2 rounded-full bg-amber-400"></span> Pending</span>
         </div>
       </div>
 
       {/* Recent Tasks List */}
-      <div className="space-y-4">
+      <div className="space-y-3.5">
         <div className="flex items-center justify-between">
           <div>
-            <h2 className="text-lg font-bold text-slate-900">Recent Tasks</h2>
+            <h2 className="text-base font-bold text-slate-900">Recent Tasks</h2>
             <p className="text-xs text-slate-500">Latest active workflows and deliverables</p>
           </div>
           <Link
             to="/tasks"
-            className="inline-flex items-center gap-1.5 text-xs font-semibold text-indigo-600 hover:text-indigo-700 hover:underline"
+            className="inline-flex items-center gap-1 text-xs font-medium text-indigo-600 hover:text-indigo-700 hover:underline"
           >
-            View All Tasks
+            View all
             <ArrowRight className="w-3.5 h-3.5" />
           </Link>
         </div>
 
         {loading ? (
           <div className="py-12 flex flex-col items-center justify-center text-slate-400">
-            <Loader2 className="w-6 h-6 animate-spin mb-2 text-indigo-600" />
-            <p className="text-xs">Loading recent workflows...</p>
+            <Loader2 className="w-5 h-5 animate-spin mb-2 text-indigo-600" />
+            <p className="text-xs">Loading tasks...</p>
           </div>
         ) : recentTasks.length === 0 ? (
           <div className="bg-white rounded-xl border border-dashed border-slate-300 p-8 text-center space-y-3">
-            <div className="w-12 h-12 rounded-full bg-indigo-50 text-indigo-600 flex items-center justify-center mx-auto">
-              <CheckSquare className="w-6 h-6" />
+            <div className="w-10 h-10 rounded-full bg-slate-100 text-slate-500 flex items-center justify-center mx-auto">
+              <CheckSquare className="w-5 h-5" />
             </div>
-            <h3 className="text-sm font-bold text-slate-800">No tasks created yet</h3>
+            <h3 className="text-sm font-semibold text-slate-800">No tasks created yet</h3>
             <p className="text-xs text-slate-500 max-w-sm mx-auto">
-              Get started by creating your first task, or analyze an incident report with AI to automatically classify urgency.
+              Get started by creating your first task, or use AI to analyze a problem description.
             </p>
-            <div className="flex justify-center gap-3 pt-2">
+            <div className="flex justify-center gap-2.5 pt-1">
               <button
                 type="button"
                 onClick={() => setIsAITriageOpen(true)}
-                className="px-3.5 py-2 text-xs font-semibold rounded-lg bg-indigo-50 text-indigo-700 hover:bg-indigo-100 transition-colors flex items-center gap-1.5"
+                className="px-3 py-1.5 text-xs font-medium rounded-lg border border-slate-300 bg-white text-slate-700 hover:bg-slate-50 transition-colors flex items-center gap-1.5"
               >
-                <Sparkles className="w-3.5 h-3.5" />
+                <Sparkles className="w-3.5 h-3.5 text-indigo-600" />
                 Analyze with AI
               </button>
               <button
@@ -274,7 +268,7 @@ export const Dashboard = () => {
                   setEditingTask(null);
                   setIsTaskModalOpen(true);
                 }}
-                className="px-3.5 py-2 text-xs font-semibold rounded-lg bg-indigo-600 text-white hover:bg-indigo-700 transition-colors flex items-center gap-1.5"
+                className="px-3 py-1.5 text-xs font-medium rounded-lg bg-indigo-600 text-white hover:bg-indigo-700 transition-colors flex items-center gap-1.5"
               >
                 <Plus className="w-3.5 h-3.5" />
                 New Task
@@ -282,7 +276,7 @@ export const Dashboard = () => {
             </div>
           </div>
         ) : (
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-3.5">
             {recentTasks.map((task) => (
               <TaskCard
                 key={task.id}

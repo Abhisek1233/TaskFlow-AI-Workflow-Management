@@ -44,7 +44,7 @@ const AppLayout = ({ children }) => {
       {isAuthenticated && !isAuthPage && (
         <footer className="bg-white border-t border-slate-200 py-6 text-center text-xs text-slate-500">
           <p>
-            TaskFlow — AI-Assisted Workflow Management Platform • Built with FastAPI, PostgreSQL, React & Google Gemini
+            TaskFlow — Workflow Management Platform • FastAPI, PostgreSQL & React
           </p>
         </footer>
       )}
