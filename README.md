@@ -253,5 +253,5 @@ If a task ID belongs to another user, the query returns `None`, and the API resp
 
 ---
 
-## 10. License & Author
-Created as a portfolio demonstration for Forward Deployed Engineering roles. Open-source under the MIT License.
+## 10. Author & License
+Created by **Abhisek Behera** as a portfolio project for Forward Deployed Engineering roles. Released under the [MIT License](LICENSE).
